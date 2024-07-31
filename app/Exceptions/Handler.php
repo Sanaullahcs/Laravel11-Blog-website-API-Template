@@ -19,6 +19,6 @@ class Handler extends ExceptionHandler
      */
     protected function unauthenticated($request, AuthenticationException $exception)
     {
-        return response()->json(['error' => 'You do not have access'], 401);
+        return response()->json(['message' => 'You do not have access. Please log in.'], 401);
     }
 }
