@@ -1,19 +1,19 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\GalleryController;
-use App\Http\Controllers\ContactSubmissionController;
+use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\GalleryController;
+use App\Http\Controllers\Api\ContactSubmissionController;
 use App\Http\Controllers\Api\HeaderController;
 use App\Http\Controllers\Api\FooterController;
 use App\Http\Controllers\Api\AboutUsController;
+use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\ProjectController;
-use App\Http\Controllers\ClientController;
-use App\Http\Controllers\Auth\LogoutController;
-
+use App\Http\Controllers\Api\ClientController;
+use App\Http\Controllers\Api\ServiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -108,4 +108,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{client}', [ClientController::class, 'destroy']); // Delete a client
     });
 
+       // Service routes
+       Route::prefix('services')->name('services.')->group(function () {
+        Route::post('/create', [ServiceController::class, 'store'])->name('create');
+        Route::get('/', [ServiceController::class, 'index'])->name('index');
+        Route::get('/{id}', [ServiceController::class, 'show'])->name('show');
+        Route::post('/{id}', [ServiceController::class, 'update'])->name('update');
+        Route::delete('/{id}', [ServiceController::class, 'destroy'])->name('destroy');
+    });
 });

@@ -9,18 +9,35 @@ use Illuminate\Support\Facades\Storage;
 
 class AboutUsController extends Controller
 {
-
-    
+    /**
+     * Get the About Us section.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
         $aboutUs = AboutUs::first();
         if ($aboutUs) {
-            return response()->json($aboutUs);
+            return response()->json([
+                'success' => true,
+                'message' => 'About Us section retrieved successfully.',
+                'data' => $aboutUs
+            ]);
         } else {
-            return response()->json(['message' => 'About Us section not found'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'About Us section not found.'
+            ], 404);
         }
     }
 
+    /**
+     * Update an existing About Us section.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
@@ -33,13 +50,16 @@ class AboutUsController extends Controller
 
         $aboutUs = AboutUs::find($id);
         if (!$aboutUs) {
-            return response()->json(['message' => 'About Us section not found'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'About Us section not found.'
+            ], 404);
         }
 
         // Handle image if present
         if ($request->has('image')) {
             // Delete old image if exists
-            if ($aboutUs->image) {
+            if ($aboutUs->image && Storage::exists($aboutUs->image)) {
                 Storage::delete($aboutUs->image);
             }
             // Store new image
@@ -51,9 +71,19 @@ class AboutUsController extends Controller
 
         $aboutUs->update($validated);
 
-        return response()->json($aboutUs);
+        return response()->json([
+            'success' => true,
+            'message' => 'About Us section updated successfully.',
+            'data' => $aboutUs
+        ]);
     }
 
+    /**
+     * Store a new About Us section.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -74,6 +104,10 @@ class AboutUsController extends Controller
 
         $aboutUs = AboutUs::create($validated);
 
-        return response()->json($aboutUs, 201);
+        return response()->json([
+            'success' => true,
+            'message' => 'About Us section created successfully.',
+            'data' => $aboutUs
+        ], 201);
     }
 }
